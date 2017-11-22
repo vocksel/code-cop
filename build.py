@@ -3,7 +3,7 @@ import os.path
 
 from elixir.compilers import ModelCompiler
 
-NAME = "TestSuite"
+NAME = "CodeCop"
 
 # The source code is compiled into a ROBLOX Model right into the plugins folder.
 #
