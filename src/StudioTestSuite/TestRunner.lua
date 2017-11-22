@@ -1,35 +1,34 @@
 local TestCase = require(script.Parent.TestCase)
 
-local testRunner = {
-  -- Where to look for test cases.
-  Locations = {
-    game.ServerScriptService,
-    game.ServerStorage,
-    game.ReplicatedStorage,
-    game.StarterPlayer
-  },
+local TestRunner = {}
+TestRunner.__index = TestRunner
 
-  -- Names of the folders that contain test cases.
-  FolderNames = {
-    "Test",
-    "Tests"
+function TestRunner.new(locations, folderNames)
+  local self = {
+    Passing = 0,
+    Failing = 0,
+    Pending = 0,
+    Locations = locations,
+    FolderNames = folderNames
   }
-}
 
-local function isTestFolder(instance)
-  for _, name in ipairs(testRunner.FolderNames) do
+  return setmetatable(self, TestRunner)
+end
+
+function TestRunner:_isTestFolder(instance)
+  for _, name in ipairs(self.FolderNames) do
     if instance.Name == name and instance:IsA("Folder") then
       return true
     end
   end
 end
 
-local function getTestFolders()
+function TestRunner:_getTestFolders()
   local folders = {}
 
-  for _, location in ipairs(testRunner.Locations) do
+  for _, location in ipairs(self.Locations) do
     for _, descendant in ipairs(location:GetDescendants()) do
-      if isTestFolder(descendant) then
+      if self:_isTestFolder(descendant) then
         table.insert(folders, descendant)
       end
     end
@@ -38,8 +37,8 @@ local function getTestFolders()
   return folders
 end
 
-local function getTestModules()
-  local folders = getTestFolders()
+function TestRunner:_getTestModules()
+  local folders = self:_getTestFolders()
   local modules = {}
 
   for _, folder in ipairs(folders) do
@@ -60,8 +59,8 @@ end
 --
 -- Instead of cut/pasting them each time, this does it for you so running your
 -- tests always requires the latest module contents.
-local function refreshModulesInMemory()
-  local modules  = getTestModules()
+function TestRunner:RefreshModulesInMemory()
+  local modules  = self:_getTestModules()
 
   for _, module in ipairs(modules) do
     local clone = module:Clone()
@@ -70,27 +69,44 @@ local function refreshModulesInMemory()
   end
 end
 
-local function runTests(module, tests)
-  for name, value in pairs(tests) do
-    assert(type(name) == "string", "keys in test modules must be strings")
+function TestRunner:LogResults()
+  print(self.Passing, "passing,", self.Failing, "failing,", self.Pending, "pending")
+end
 
-    if type(value) == "table" then
-      runTests(module, value)
+function TestRunner:RunTestCase(module, callback)
+  local case = TestCase.new(module, callback)
+  local result, message = case:Run()
 
-    elseif type(value) == "function" then
-      local case = TestCase.new(module, value)
-      case:Run()
+  if result == "passing" then
+    self.Passing = self.Passing + 1
+  elseif result == "failing" then
+    self.Failing = self.Failing + 1
+    print(message)
+  elseif result == "pending" then
+    self.Pending = self.Pending + 1
+    print(message)
+  end
+end
+
+function TestRunner:Run()
+  for _, module in ipairs(self:_getTestModules()) do
+    local function runTests(tests)
+      for name, value in pairs(tests) do
+        assert(type(name) == "string", "keys in test modules must be strings")
+
+        -- dealing with a container for test cases
+        if type(value) == "table" then
+          runTests(value)
+
+        -- dealing with a test case
+        elseif type(value) == "function" then
+          self:RunTestCase(module, value)
+        end
+      end
     end
+
+    runTests(require(module))
   end
 end
 
-function testRunner.run()
-  refreshModulesInMemory()
-
-  for _, module in ipairs(getTestModules()) do
-    local tests = require(module)
-    runTests(module, tests)
-  end
-end
-
-return testRunner
+return TestRunner

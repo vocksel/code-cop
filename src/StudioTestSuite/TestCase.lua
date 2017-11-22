@@ -1,5 +1,3 @@
-local test = game:GetService("TestService")
-
 local TestCase = {}
 TestCase.__index = TestCase
 
@@ -81,22 +79,24 @@ function TestCase:Run()
   local failureMessage = self:GetFailureMessage()
 
   function env.assert(condition)
-    test:Check(condition, failureMessage)
     self.Assertions = self.Assertions + 1
+    self.Passed = condition
   end
 
-  local success, message = pcall(function()
+  local success, err = pcall(function()
     self.Callback()
   end)
 
-  if self.Assertions == 0 then
-    test:Warn(false, failureMessage .. "\n    No assertions found")
-  end
-
   if success then
-    print("Passed")
+    if self.Passed then
+      return "passing"
+    else
+      return "pending", failureMessage .. "\n    No assertions found"
+    end
   else
-    test:Error(failureMessage .. "\n    " .. message)
+    local message = failureMessage
+    if err then message = message .. "\n    " .. err end
+    return "failing", message
   end
 end
 

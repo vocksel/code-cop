@@ -1,21 +1,41 @@
-local run = game:GetService("RunService")
 local userInput = game:GetService("UserInputService")
 
-local testRunner = require(script.Parent.TestRunner)
+local TestRunner = require(script.Parent.TestRunner)
 
 -- A keybinding is one or more keys that are held to perform an action.
 local DEFAULT_KEYBINDS = {
   RunTests = { Enum.KeyCode.LeftShift, Enum.KeyCode.T }
 }
 
+-- Where to look for test cases.
+local LOCATIONS = {
+  game.ServerScriptService,
+  game.ServerStorage,
+  game.ReplicatedStorage,
+  game.StarterPlayer
+}
+
+-- Names of the folders that contain test cases.
+local FOLDER_NAMES = {
+  "Test",
+  "Tests"
+}
+
 local toolbar = plugin:CreateToolbar("Test Suite")
+
+local function runTests()
+  local runner = TestRunner.new(LOCATIONS, FOLDER_NAMES)
+  runner:RefreshModulesInMemory()
+  runner:Run()
+  runner:LogResults()
+end
 
 local function handleRunButton()
   local button = toolbar:CreateButton("Run",
     "Runs all of the test cases in the game",
     "rbxassetid://1193030998")
 
-  button.Click:Connect(testRunner.run)
+  button.Click:Connect(runTests)
 end
 
 local function handleKeybindings()
@@ -45,7 +65,7 @@ local function handleKeybindings()
   userInput.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.Keyboard then
       if isKeybindHeld(DEFAULT_KEYBINDS.RunTests) then
-        testRunner.run()
+        runTests()
       end
     end
   end)
