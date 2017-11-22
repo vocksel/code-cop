@@ -10,6 +10,18 @@ This is a replacement for Roblox's built in [TestService](http://wiki.roblox.com
 
 Tests are written similarly to frameworks like [Busted](http://olivinelabs.com/busted/) or [Mocha](http://mochajs.org/), but instead of `describe()` and `it()` functions, tests are written as simple table data structures:
 
+Given a simple function that returns a greeting:
+
+```lua
+local function hello(name)
+  return "Hello, " .. (name or "World") .. "!"
+end
+
+return hello
+```
+
+We can write test cases for it with the following:
+
 ```lua
 local hello = require(script.Parent.Parent.Hello)
 
