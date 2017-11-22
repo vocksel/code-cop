@@ -1,6 +1,10 @@
 local TestCase = {}
 TestCase.__index = TestCase
 
+local function indent(str)
+  return "    " .. str
+end
+
 --------------------------------------------------------------------------------
 -- WARNING: The below is actually the worst code I've ever written in my life.
 -- It's simply used by the getFailureMessage() function below to log the name of
@@ -78,6 +82,8 @@ function TestCase:Run()
   local env = getfenv(self.Callback)
   local failureMessage = self:GetFailureMessage()
 
+  local startingAssertions = self.Assertions
+
   function env.assert(condition)
     self.Assertions = self.Assertions + 1
     self.Passed = condition
@@ -87,16 +93,21 @@ function TestCase:Run()
     self.Callback()
   end)
 
-  if success then
-    if self.Passed then
-      return "passing"
-    else
-      return "pending", failureMessage .. "\n    No assertions found"
-    end
+  if success and self.Passed then
+    return "passing"
+  elseif self.Assertions == 0 then
+    return "pending", failureMessage .. "\n    No assertions found"
   else
-    local message = failureMessage
-    if err then message = message .. "\n    " .. err end
-    return "failing", message
+    local message = {
+      failureMessage,
+      indent("Assertion " .. self.Assertions - startingAssertions .. " failed")
+    }
+
+    if err then
+      table.insert(message, indent(err))
+    end
+
+    return "failing", table.concat(message, "\n")
   end
 end
 
