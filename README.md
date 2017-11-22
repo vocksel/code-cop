@@ -40,12 +40,9 @@ local tests = {
 return tests
 ```
 
-A `describe()` in this case would be a key + table, and an `it()` would be a
-key + function.
-
-The built-in `assert` function is overwritten inside each test case. You use it to verify that the condition passed to it is true. If it is, it passes. You can use as many `assert` calls as you like in a test case. If any assertion fails, the case fails too.
-
 Functions are treated as test cases, and tables are treated as containers for test cases. Using tables allows you to break up your test cases based on specific functionality, instead of grouping each case together.
+
+The built-in `assert` function is overwritten inside each test case to give you a familiar interface to work with. You use it to verify that the condition passed to it is true. If it is, the test case passes. You can use as many `assert` calls as you like in a test case. If any assertion fails, the case fails too.
 
 ## Structuring Tests
 
