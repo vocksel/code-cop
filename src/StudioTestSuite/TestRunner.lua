@@ -93,9 +93,11 @@ function TestRunner:RunTestCase(module, callback)
     self.Passing = self.Passing + 1
   elseif result == "failing" then
     self.Failing = self.Failing + 1
-    print(message)
   elseif result == "pending" then
     self.Pending = self.Pending + 1
+  end
+
+  if message then
     print(message)
   end
 end
