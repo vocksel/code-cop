@@ -1,6 +1,7 @@
 local userInput = game:GetService("UserInputService")
 
 local TestRunner = require(script.Parent.TestRunner)
+local log = require(script.Parent.Log)
 
 -- A keybinding is one or more keys that are held to perform an action.
 local DEFAULT_KEYBINDS = {
@@ -25,6 +26,9 @@ local toolbar = plugin:CreateToolbar("Test Suite")
 
 local function runTests()
   local runner = TestRunner.new(LOCATIONS, FOLDER_NAMES)
+
+  log("Running tests...")
+
   runner:RefreshModulesInMemory()
   runner:Run()
   runner:LogResults()

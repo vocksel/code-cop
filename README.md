@@ -1,12 +1,12 @@
-# Studio Test Suite Spec
+# Code Cop
 
-Studio Test Suite (STS) is a simple UI for running unit tests in Roblox.
+Code Cop is a simple plugin for running unit tests in Roblox.
 
-This is a full replacement for Roblox's built in [TestService](), with support for behavior-driven development style test cases.
+This is a full replacement for Roblox's built in [TestService](http://wiki.roblox.com/index.php?title=API:Class/TestService), with support for behavior-driven development style test cases.
 
 ## Writing Tests
 
-Tests are written similarly to frameworks like [Busted](http://olivinelabs.com/busted/) or [Mocha](http://mochajs.org/), but instead of `describe()` and `it()` functions, we just use tables and key/value pairs. For example:
+Tests are written similarly to frameworks like [Busted](http://olivinelabs.com/busted/) or [Mocha](http://mochajs.org/), but instead of `describe()` and `it()` functions, tests are written as simple table data structures:
 
 ```lua
 local hello = require(script.Parent.Parent.Hello)
@@ -27,15 +27,19 @@ return tests
 ```
 
 A `describe()` in this case would be a key + table, and an `it()` would be a
-key + function. All Spec modules follow this structure for definning tests.
+key + function.
+
+The built-in `assert` function is overwritten inside each test case. You use it to verify that the condition passed to it is true. If it is, it passes. You can use as many `assert` calls as you like in a test case. If any assertion fails, the case fails too.
+
+Functions are treated as test cases, and tables are treated as containers for test cases. Using tables allows you to break up your test cases based on specific functionality, instead of grouping each case together.
 
 ## Structuring Tests
 
-Tests are stored as ModuleScripts under a Folder named `Test` or `Tests` (your choice). This Folder will usually live in the same location as the modules being tested. For example:
+Tests are stored as ModuleScripts under a Folder named `Test` or `Tests` (your choice). It's advised to keep this folder in the same location as the modules being tested. For example:
 
 ![An example showing the hierarchy that could be used for test cases](images/example-structure.png)
 
-The Hello module contains the code that will be used throughout the game, while TestHello contains test cases to make sure it works properly.
+The `Hello` module contains the code that will be used throughout the game, while `TestHello` contains test cases to make sure it works properly.
 
 ## Running Tests
 

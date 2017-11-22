@@ -4,7 +4,7 @@
 -- plugin it's coming from.
 
 local function log(...)
-  print("[TestSuite]", ...)
+  print("[CodeCop]", ...)
 end
 
 return log
