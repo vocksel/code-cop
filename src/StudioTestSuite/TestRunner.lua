@@ -1,4 +1,5 @@
 local TestCase = require(script.Parent.TestCase)
+local log = require(script.Parent.Log)
 
 local TestRunner = {}
 TestRunner.__index = TestRunner
@@ -8,6 +9,7 @@ function TestRunner.new(locations, folderNames)
     Passing = 0,
     Failing = 0,
     Pending = 0,
+    TimeSpent = 0,
     Locations = locations,
     FolderNames = folderNames
   }
@@ -52,6 +54,10 @@ function TestRunner:_getTestModules()
   return modules
 end
 
+function TestRunner:GetTotalTests()
+  return self.Passing + self.Failing + self.Pending
+end
+
 -- Re-creates all of the spec modules.
 --
 -- This is to get around Studio keeping the modules in memory and reusing them
@@ -69,8 +75,14 @@ function TestRunner:RefreshModulesInMemory()
   end
 end
 
+function round(num, numDecimalPlaces)
+  local mult = 10^(numDecimalPlaces or 0)
+  return math.floor(num * mult + 0.5) / mult
+end
+
 function TestRunner:LogResults()
-  print(self.Passing, "passing,", self.Failing, "failing,", self.Pending, "pending")
+  log("Ran", self:GetTotalTests(), "tests in", round(self.TimeSpent, 3), "seconds")
+  log(self.Passing, "passing,", self.Failing, "failing,", self.Pending, "pending")
 end
 
 function TestRunner:RunTestCase(module, callback)
@@ -89,6 +101,8 @@ function TestRunner:RunTestCase(module, callback)
 end
 
 function TestRunner:Run()
+  local start = tick()
+
   for _, module in ipairs(self:_getTestModules()) do
     local function runTests(tests)
       for name, value in pairs(tests) do
@@ -107,6 +121,8 @@ function TestRunner:Run()
 
     runTests(require(module))
   end
+
+  self.TimeSpent = tick() - start
 end
 
 return TestRunner
