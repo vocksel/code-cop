@@ -4,11 +4,11 @@ Code Cop is a simple plugin for running unit tests in Roblox.
 
 This is a replacement for Roblox's built in [TestService](http://wiki.roblox.com/index.php?title=API:Class/TestService), with support for behavior-driven development style test cases.
 
-[Get the latest version of the Code Cop plugin](https://www.roblox.com/library/1194630699/Code-Cop) and continue reading to learn how to use it.
+Get the latest version of the [Code Cop plugin](https://www.roblox.com/library/1194630699/Code-Cop) and continue reading to learn how to use it.
 
 ## Writing Tests
 
-Tests are written similarly to frameworks like [Busted](http://olivinelabs.com/busted/) or [Mocha](http://mochajs.org/), but instead of `describe()` and `it()` functions, tests are written as simple table data structures:
+Tests are written similarly to frameworks like [Busted](http://olivinelabs.com/busted/) and [Mocha](http://mochajs.org/), but instead of `describe()` and `it()` functions, tests are written as tables.
 
 Given a simple function that returns a greeting:
 
