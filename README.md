@@ -60,9 +60,7 @@ Everything is logged to the output window, so make sure you have that up so you 
 
 ## Compiling
 
-On Windows, [Elixir](https://github.com/vocksel/elixir) is used to compile the plugin's source code. Once installed, simply run `python build.py` from the root directory.
-
-The code will automatically be built to your Roblox install's `plugins` folder and you'll be able to load right into Studio to use it.
+On Windows, [Elixir](https://github.com/vocksel/elixir) is used to compile the plugin's source code. Once installed, simply run `python build.py` from the root directory. The code will automatically be built to your Roblox install's `plugins` folder and you'll be able to load right into Studio to use it.
 
 If you're not on Windows (or you don't want to install Elixir), create a `CodeCop` folder in a game and copy/paste each file's source code to script instances. `Main.lua` is a plain `Script`, while every other file is a `ModuleScript`.
 
