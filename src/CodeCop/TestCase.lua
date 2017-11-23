@@ -89,25 +89,19 @@ function TestCase:Run()
     self.Passed = condition
   end
 
-  local success, err = pcall(function()
-    self.Callback()
-  end)
+  self.Callback()
 
-  if success and self.Passed then
-    return "passing"
-  elseif self.Assertions == 0 then
-    return "pending", failureMessage .. "\n    No assertions found"
-  else
-    local message = {
-      failureMessage,
-      indent("Assertion " .. self.Assertions - startingAssertions .. " failed")
-    }
-
-    if err then
-      table.insert(message, indent(err))
+  if self.Assertions > 0 then
+    if self.Passed then
+      return "passing"
+    else
+      local assertNumber = self.Assertions - startingAssertions
+      local message = { failureMessage, indent("Assertion %i failed"):format(assertNumber) }
+      return "failing", table.concat(message, "\n")
     end
-
-    return "failing", table.concat(message, "\n")
+  else
+    local message = { failureMessage, indent("No assertions found") }
+    return "pending", table.concat(message, "\n")
   end
 end
 
