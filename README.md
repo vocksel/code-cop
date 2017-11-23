@@ -68,6 +68,10 @@ It'll look something like this:
 
 ![The source code manually compiled in Studio](images/manual-compiling.png)
 
+Next you should locate your Roblox plugins folder. On Windows this is under `C:\Users\You\AppData\Local\Roblox\Plugins`. Mac will be different.
+
+Right click the CodeCop folder and select `Save to File...`, saving it in your plugins folder. You can now make changes and repeat this step to update the plugin and make sure everything works.
+
 ## License
 
 The MIT License (MIT)
