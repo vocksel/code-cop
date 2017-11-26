@@ -58,6 +58,18 @@ Either click on the plugin's "Run" button, or use Shift+T to run your test cases
 
 Everything is logged to the output window, so make sure you have that up so you can view the results.
 
+## Caveats
+
+It's not advisable to use this plugin when you and another user will both be working on the codebase in a Team Create.
+
+When running tests, every ModuleScript in the game is recreated (effectively cut/pasted) so that its freed from Studio's internal cache. This allows you to make a change to your test modules or codebase and have those changes applied when running tests.
+
+This is convenient but comes with some side-effects:
+
+* Any ModuleScript you have open as a tab will be closed.
+* Ctrl+Shift+T cannot be used to reopen any ModuleScript after running tests.
+* In a Team Create environment with other users working on the codebase, running tests can result in interfering with co-workers workflows.
+
 ## Compiling
 
 On Windows, [Elixir](https://github.com/vocksel/elixir) is used to compile the plugin's source code. Once installed, simply run `python build.py` from the root directory. The code will automatically be built to your Roblox install's `plugins` folder and you'll be able to load right into Studio to use it.
