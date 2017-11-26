@@ -54,6 +54,20 @@ function TestRunner:_getTestModules()
   return modules
 end
 
+function TestRunner:_getAllModules()
+  local modules = {}
+
+  for _, location in ipairs(self.Locations) do
+    for _, descendant in ipairs(location:GetDescendants()) do
+      if descendant:IsA("ModuleScript") then
+        table.insert(modules, descendant)
+      end
+    end
+  end
+
+  return modules
+end
+
 function TestRunner:GetTotalTests()
   return self.Passing + self.Failing + self.Pending
 end
@@ -66,7 +80,7 @@ end
 -- Instead of cut/pasting them each time, this does it for you so running your
 -- tests always requires the latest module contents.
 function TestRunner:RefreshModulesInMemory()
-  local modules  = self:_getTestModules()
+  local modules  = self:_getAllModules()
 
   for _, module in ipairs(modules) do
     local clone = module:Clone()
