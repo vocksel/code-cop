@@ -72,10 +72,10 @@ function TestCase.new(module, callback)
 end
 
 function TestCase:GetFailureMessage()
-  local template = "Test failed in %s: %s"
+  local template = "Test failed in %s:\n%s"
   local testStack = getTestCaseStack(require(self.Module), self.Callback)
 
-  return template:format(self.Module.Name, table.concat(testStack, " > "))
+  return template:format(self.Module:GetFullName(), table.concat(testStack, " > "))
 end
 
 function TestCase:Run()
@@ -96,12 +96,12 @@ function TestCase:Run()
       return "passing"
     else
       local assertNumber = self.Assertions - startingAssertions
-      local message = { failureMessage, indent("Assertion %i failed"):format(assertNumber) }
-      return "failing", table.concat(message, "\n")
+      local message = { failureMessage, ("Assertion %i failed"):format(assertNumber) }
+      return "failing", table.concat(message, " > ")
     end
   else
-    local message = { failureMessage, indent("No assertions found") }
-    return "pending", table.concat(message, "\n")
+    local message = { failureMessage, "No assertions found" }
+    return "pending", table.concat(message, " > ")
   end
 end
 

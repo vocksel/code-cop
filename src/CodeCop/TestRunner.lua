@@ -112,7 +112,7 @@ function TestRunner:RunTestCase(module, callback)
   end
 
   if message then
-    print(message)
+    warn(message)
   end
 end
 
