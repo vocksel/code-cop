@@ -81,23 +81,39 @@ end
 function TestCase:Run()
   local env = getfenv(self.Callback)
   local failureMessage = self:GetFailureMessage()
-
-  local startingAssertions = self.Assertions
+  local failedAssertions = {}
 
   function env.assert(condition)
     self.Assertions = self.Assertions + 1
-    self.Passed = condition
-  end
 
+    local passed = condition == true
+
+    if passed then
+      if self.Passed ~= false then
+        self.Passed = passed
+      end
+    else
+      self.Passed = false
+      table.insert(failedAssertions, self.Assertions)
+    end
+  end
   self.Callback()
 
   if self.Assertions > 0 then
     if self.Passed then
       return "passing"
     else
-      local assertNumber = self.Assertions - startingAssertions
-      local message = { failureMessage, ("Assertion %i failed"):format(assertNumber) }
-      return "failing", table.concat(message, " > ")
+      local message = { failureMessage, " > " }
+
+      if #failedAssertions > 1 then
+        for _, assertion in pairs(failedAssertions) do
+          table.insert(message, ("\n    Assertion %i failed"):format(assertion))
+        end
+      else
+        table.insert(message, ("Assertion %i failed"):format(failedAssertions[1]))
+      end
+
+      return "failing", table.concat(message)
     end
   else
     local message = { failureMessage, "No assertions found" }
