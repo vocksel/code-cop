@@ -1,10 +1,6 @@
 local TestCase = {}
 TestCase.__index = TestCase
 
-local function indent(str)
-  return "    " .. str
-end
-
 --------------------------------------------------------------------------------
 -- WARNING: The below is actually the worst code I've ever written in my life.
 -- It's simply used by the getFailureMessage() function below to log the name of
@@ -36,7 +32,7 @@ end
 --
 --   { "Array", "Add()", "it should add items to the array" }
 local function getTestCaseStack(testCases, testCallback, stack)
-  local stack = stack or { }
+  stack = stack or { }
 
   for name, value in pairs(testCases) do
     if type(value) == "function" and value == testCallback then
