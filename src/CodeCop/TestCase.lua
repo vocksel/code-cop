@@ -72,7 +72,7 @@ function TestCase.new(module, callback)
 end
 
 function TestCase:GetFailureMessage()
-  local template = "Test failed in %s:\n%s"
+  local template = "Test failed in %s: %s"
   local testStack = getTestCaseStack(require(self.Module), self.Callback)
 
   return template:format(self.Module:GetFullName(), table.concat(testStack, " > "))
