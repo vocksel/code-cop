@@ -93,7 +93,13 @@ function TestCase:Run()
       table.insert(failedAssertions, self.Assertions)
     end
   end
-  self.Callback()
+
+  local success, err = pcall(self.Callback)
+
+  if not success then
+    local message = { failureMessage, "\n", err }
+    return "failing", table.concat(message)
+  end
 
   if self.Assertions > 0 then
     if self.Passed then
