@@ -19,7 +19,7 @@ end
 
 function TestRunner:_isTestFolder(instance)
   for _, name in ipairs(self.FolderNames) do
-    if instance.Name == name and instance:IsA("Folder") then
+    if instance.Name:lower() == name:lower() and instance:IsA("Folder") then
       return true
     end
   end
