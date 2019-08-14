@@ -1,5 +1,7 @@
 # Code Cop
 
+**DEPRECATED: Consider using TestEz instead: https://github.com/Roblox/testez/**
+
 Code Cop is a simple plugin for running unit tests in Roblox.
 
 This is a replacement for Roblox's built in [TestService](http://wiki.roblox.com/index.php?title=API:Class/TestService), with support for behavior-driven development style test cases.
